@@ -1,0 +1,24 @@
+{
+  "name": "How-To-Redesign-BE",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js",
+    "test": "cross-env DB_ENV=testing jest --watch"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManSleen/How-To-Redesign-BE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ManSleen/How-To-Redesign-BE/issues"
+  },
+  "homepage": "https://github.com/ManSleen/How-To-Redesign-BE#readme"
+}
