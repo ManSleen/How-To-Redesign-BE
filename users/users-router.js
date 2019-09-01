@@ -10,9 +10,7 @@ router.get("/", (req, res) => {
       res.status(200).json(users);
     })
     .catch(err => {
-      return res
-        .status(500)
-        .json({ message: "Could not get all users from the DB" });
+      res.status(500).json({ message: "Could not get all users from the DB" });
     });
 });
 
