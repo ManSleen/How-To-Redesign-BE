@@ -39,7 +39,6 @@ exports.up = function(knex) {
       steps
         .integer("step_number")
         .unsigned()
-        .increments()
         .notNullable();
       steps.string("step_image_url", 4000).notNullable();
       steps
