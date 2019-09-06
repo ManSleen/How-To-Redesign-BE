@@ -63,6 +63,19 @@ exports.up = function(knex) {
         .inTable("guides")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
+    })
+
+    .createTable("materials", materials => {
+      materials.increments();
+      materials.string("material", 1000).notNullable();
+      materials
+        .integer("guide_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("guides")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     });
 };
 
