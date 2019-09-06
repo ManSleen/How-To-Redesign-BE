@@ -76,6 +76,19 @@ exports.up = function(knex) {
         .inTable("guides")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
+    })
+
+    .createTable("tools", tools => {
+      tools.increments();
+      tools.string("tool", 1000).notNullable();
+      tools
+        .integer("guide_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("guides")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     });
 };
 
