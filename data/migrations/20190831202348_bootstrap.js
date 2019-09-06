@@ -50,6 +50,19 @@ exports.up = function(knex) {
         .inTable("guides")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
+    })
+
+    .createTable("keywords", keywords => {
+      keywords.increments();
+      keywords.string("keyword", 255).notNullable();
+      keywords
+        .integer("guide_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("guides")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     });
 };
 
