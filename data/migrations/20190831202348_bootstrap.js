@@ -30,6 +30,26 @@ exports.up = function(knex) {
         .inTable("users")
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
+    })
+
+    .createTable("steps", steps => {
+      steps.increments();
+      steps.string("step_title", 500).notNullable();
+      steps.string("step_description", 2000).notNullable();
+      steps
+        .integer("step_number")
+        .unsigned()
+        .increments()
+        .notNullable();
+      steps.string("step_image_url", 4000).notNullable();
+      steps
+        .integer("guide_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("guides")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
     });
 };
 
