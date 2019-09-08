@@ -2,11 +2,13 @@ const db = require("../data/db-config");
 
 module.exports = {
   add,
+  addStep,
   find,
   findBy,
   findById,
   remove,
-  update
+  update,
+  getStepsByGuide
 };
 
 function find() {
@@ -27,6 +29,12 @@ function add(guide) {
     });
 }
 
+function addStep(step, id) {
+  return db("steps")
+    .insert(step)
+    .where({ guide_id: id });
+}
+
 function findById(id) {
   return db("guides")
     .where({ id })
@@ -44,4 +52,16 @@ function update(changes, id) {
     .update(changes)
     .where({ id })
     .then(() => findById(id));
+}
+
+function getStepsByGuide(id) {
+  return db("steps as s")
+    .select(
+      "s.step_number",
+      "s.step_title",
+      "s.step_description",
+      "s.step_image_url"
+    )
+    .where({ "s.guide_id": id })
+    .orderBy("s.step_number");
 }

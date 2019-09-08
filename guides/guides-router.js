@@ -1,7 +1,9 @@
 const router = require("express").Router();
 
 const Guides = require("./guides-model");
+const Steps = require("../steps/steps-model");
 
+// Get all guides
 router.get("/", (req, res) => {
   Guides.find()
     .then(guide => {
@@ -12,12 +14,18 @@ router.get("/", (req, res) => {
     });
 });
 
+// Get guide by ID
 router.get("/:id", (req, res) => {
   const { id } = req.params;
   Guides.findById(id)
     .then(guide => {
       if (guide) {
-        res.status(200).json(guide);
+        Guides.getStepsByGuide(id)
+          .then(steps => {
+            guide.steps = steps;
+            res.status(200).json(guide);
+          })
+          .catch();
       } else {
         res
           .status(404)
@@ -29,6 +37,7 @@ router.get("/:id", (req, res) => {
     );
 });
 
+// Edit a guide using its ID and pass in changes in body
 router.put("/:id", (req, res) => {
   const changes = req.body;
   const { id } = req.params;
@@ -47,9 +56,10 @@ router.put("/:id", (req, res) => {
     });
 });
 
+// Delete a guide using its ID
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  let foundStep;
+  let foundGuide;
   Guides.findById(id)
     .then(guide => {
       if (guide) {
@@ -72,25 +82,40 @@ router.delete("/:id", (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
-  Guides.delete()
-    .then(guide => {
-      res.status(200).json(guide);
-    })
-    .catch(err => {
-      res.status(500).json({ message: "Could not delete guide from the db" });
-    });
-});
-
+// Add a new guide
 router.post("/", (req, res) => {
   const guide = req.body;
-
   Guides.add(guide)
     .then(guide => {
       res.status(200).json(guide);
     })
     .catch(err => {
       res.status(500).json({ message: "Could not add guide to the db" });
+    });
+});
+
+// Add steps to a specific guide using guide id
+router.post("/:id/steps", (req, res) => {
+  const step = req.body;
+  const { id } = req.params;
+
+  Guides.findById(id)
+    .then(guide => {
+      if (guide) {
+        step.guide_id = id;
+        Guides.addStep(step)
+          .then(guide => {
+            res.status(201).json(guide);
+          })
+          .catch(err => {
+            res.status(500).json({ message: "Could not add step to the db" });
+          });
+      } else {
+        res.status(404).json({ message: "Could not find that guide by ID" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Could not add step to the db" });
     });
 });
 

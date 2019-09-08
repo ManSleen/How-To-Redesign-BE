@@ -3,7 +3,7 @@ const router = require("express").Router();
 // Import data model
 const Steps = require("./steps-model");
 
-// Gets an array of all registered steps
+// Gets an array of all steps
 router.get("/", (req, res) => {
   Steps.find()
     .then(steps => {
@@ -30,20 +30,6 @@ router.get("/:id", (req, res) => {
     .catch(err =>
       res.status(500).json({ message: "Could not get step from the DB" })
     );
-});
-
-//Get a single step by stepname
-router.get("/search/:name", (req, res) => {
-  const { name } = req.params;
-  const searchTerm = name.replace("_", " ");
-
-  Steps.findBy({ stepname: searchTerm })
-    .then(step => {
-      res.status(200).json(step);
-    })
-    .catch(error => {
-      res.status(500).json({ message: "There was an error finding that step" });
-    });
 });
 
 //Updates a step by passing step's ID as a request parameter and changes in request body
