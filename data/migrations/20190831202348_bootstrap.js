@@ -21,6 +21,7 @@ exports.up = function(knex) {
       guides.string("guide_name", 500).notNullable();
       guides.string("guide_description", 1000).notNullable();
       guides.date("date_created").notNullable();
+      guides.string("guide_category", 255).notNullable();
       guides.string("guide_image", 4000).notNullable();
       guides
         .integer("guide_creator")
@@ -112,5 +113,13 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("users");
+  return knex.schema
+    .dropTableIfExists("likes")
+    .dropTableIfExists("tools")
+    .dropTableIfExists("materials")
+    .dropTableIfExists("keywords")
+    .dropTableIfExists("steps")
+    .dropTableIfExists("keywords")
+    .dropTableIfExists("guides")
+    .dropTableIfExists("users");
 };
