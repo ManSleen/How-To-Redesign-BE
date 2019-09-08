@@ -20,7 +20,7 @@ exports.up = function(knex) {
       guides.increments();
       guides.string("guide_name", 500).notNullable();
       guides.string("guide_description", 1000).notNullable();
-      guides.string("date_created").notNullable();
+      guides.date("date_created").notNullable();
       guides.string("guide_category", 255).notNullable();
       guides.string("guide_image", 4000).notNullable();
       guides
