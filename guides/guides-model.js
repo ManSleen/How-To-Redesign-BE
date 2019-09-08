@@ -17,10 +17,10 @@ function findBy(filter) {
   return db("guides").where(filter);
 }
 
-function add(user) {
+function add(guide) {
   return db("guides")
     .returning("id")
-    .insert(user)
+    .insert(guide)
     .then(ids => {
       const [id] = ids;
       return findById(id);
