@@ -23,9 +23,49 @@ router.get("/:id", (req, res) => {
         Guides.getStepsByGuide(id)
           .then(steps => {
             guide.steps = steps;
-            res.status(200).json(guide);
+            Guides.getKeywordsByGuide(id)
+              .then(keywords => {
+                guide.keywords = keywords;
+                Guides.getMaterialsByGuide(id)
+                  .then(materials => {
+                    guide.materials = materials;
+                    Guides.getToolsByGuide(id)
+                      .then(tools => {
+                        guide.tools = tools;
+                        Guides.getLikesByGuide(id)
+                          .then(likes => {
+                            guide.likes = likes;
+                            res.status(200).json(guide);
+                          })
+                          .catch(error => {
+                            res
+                              .status()
+                              .json({
+                                message: "Could not get likes for guide"
+                              });
+                          });
+                      })
+                      .catch(error => {
+                        res
+                          .status()
+                          .json({ message: "Could not get tools for guide" });
+                      });
+                  })
+                  .catch(error => {
+                    res
+                      .status()
+                      .json({ message: "Could not get materials for guide" });
+                  });
+              })
+              .catch(error => {
+                res
+                  .status()
+                  .json({ message: "Could not get keywords for guide" });
+              });
           })
-          .catch();
+          .catch(error => {
+            res.status().json({ message: "Could not get steps for guide" });
+          });
       } else {
         res
           .status(404)
