@@ -6,6 +6,8 @@ const morgan = require("morgan");
 
 // import routers
 const UsersRouter = require("./users/users-router.js");
+const GuidesRouter = require("./guides/guides-router.js");
+const StepsRouter = require("./steps/steps-router.js");
 const AuthRouter = require("./auth/auth-router.js");
 
 // create server using express
@@ -19,6 +21,8 @@ server.use(morgan("dev"));
 
 // setup paths for routers
 server.use("/api/users", UsersRouter);
+server.use("/api/guides", GuidesRouter);
+server.use("/api/steps", StepsRouter);
 server.use("/api/auth", AuthRouter);
 
 // GET request to root / to make sure everything is working
