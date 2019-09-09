@@ -23,44 +23,15 @@ router.get("/:id", (req, res) => {
         Guides.getStepsByGuide(id)
           .then(steps => {
             guide.steps = steps;
-            Guides.getKeywordsByGuide(id)
-              .then(keywords => {
-                guide.keywords = keywords;
-                Guides.getMaterialsByGuide(id)
-                  .then(materials => {
-                    guide.materials = materials;
-                    Guides.getToolsByGuide(id)
-                      .then(tools => {
-                        guide.tools = tools;
-                        Guides.getLikesByGuide(id)
-                          .then(likes => {
-                            guide.likes = likes;
-                            res.status(200).json(guide);
-                          })
-                          .catch(error => {
-                            res
-                              .status()
-                              .json({
-                                message: "Could not get likes for guide"
-                              });
-                          });
-                      })
-                      .catch(error => {
-                        res
-                          .status()
-                          .json({ message: "Could not get tools for guide" });
-                      });
-                  })
-                  .catch(error => {
-                    res
-                      .status()
-                      .json({ message: "Could not get materials for guide" });
-                  });
+            Guides.getLikesByGuide(id)
+              .then(likes => {
+                guide.likes = likes;
+                res.status(200).json(guide);
               })
               .catch(error => {
-                res
-                  .status()
-                  .json({ message: "Could not get keywords for guide" });
+                res.status().json({
+                  message: "Could not get likes for guide"
+                });
               });
           })
           .catch(error => {
@@ -138,7 +109,6 @@ router.post("/", (req, res) => {
 router.post("/:id/steps", (req, res) => {
   const step = req.body;
   const { id } = req.params;
-
   Guides.findById(id)
     .then(guide => {
       if (guide) {

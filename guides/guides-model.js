@@ -9,9 +9,7 @@ module.exports = {
   remove,
   update,
   getStepsByGuide,
-  getKeywordsByGuide,
-  getMaterialsByGuide,
-  getToolsByGuide,
+  addLike,
   getLikesByGuide
 };
 
@@ -36,6 +34,12 @@ function add(guide) {
 function addStep(step, id) {
   return db("steps")
     .insert(step)
+    .where({ guide_id: id });
+}
+
+function addLike(like, id) {
+  return db("likes")
+    .insert(like)
     .where({ guide_id: id });
 }
 
@@ -68,24 +72,6 @@ function getStepsByGuide(id) {
     )
     .where({ "s.guide_id": id })
     .orderBy("s.step_number");
-}
-
-function getKeywordsByGuide(id) {
-  return db("keywords as k")
-    .select("k.keyword")
-    .where({ "k.guide_id": id });
-}
-
-function getMaterialsByGuide(id) {
-  return db("materials as m")
-    .select("m.material")
-    .where({ "m.guide_id": id });
-}
-
-function getToolsByGuide(id) {
-  return db("tools as t")
-    .select("t.tool")
-    .where({ "t.guide_id": id });
 }
 
 function getLikesByGuide(id) {
