@@ -23,6 +23,9 @@ exports.up = function(knex) {
       guides.date("date_created").notNullable();
       guides.string("guide_category", 255).notNullable();
       guides.string("guide_image", 4000).notNullable();
+      guides.string("guide_keywords", 4000).notNullable();
+      guides.string("guide_materials", 4000).notNullable();
+      guides.string("guide_tools", 4000).notNullable();
       guides
         .integer("guide_creator")
         .unsigned()
@@ -43,45 +46,6 @@ exports.up = function(knex) {
         .notNullable();
       steps.string("step_image_url", 4000).notNullable();
       steps
-        .integer("guide_id")
-        .unsigned()
-        .notNullable()
-        .references("id")
-        .inTable("guides")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    })
-
-    .createTable("keywords", keywords => {
-      keywords.increments();
-      keywords.string("keyword", 255).notNullable();
-      keywords
-        .integer("guide_id")
-        .unsigned()
-        .notNullable()
-        .references("id")
-        .inTable("guides")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    })
-
-    .createTable("materials", materials => {
-      materials.increments();
-      materials.string("material", 1000).notNullable();
-      materials
-        .integer("guide_id")
-        .unsigned()
-        .notNullable()
-        .references("id")
-        .inTable("guides")
-        .onDelete("CASCADE")
-        .onUpdate("CASCADE");
-    })
-
-    .createTable("tools", tools => {
-      tools.increments();
-      tools.string("tool", 1000).notNullable();
-      tools
         .integer("guide_id")
         .unsigned()
         .notNullable()

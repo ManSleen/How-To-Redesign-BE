@@ -8,7 +8,9 @@ module.exports = {
   findById,
   remove,
   update,
-  getStepsByGuide
+  getStepsByGuide,
+  addLike,
+  getLikesByGuide
 };
 
 function find() {
@@ -32,6 +34,12 @@ function add(guide) {
 function addStep(step, id) {
   return db("steps")
     .insert(step)
+    .where({ guide_id: id });
+}
+
+function addLike(like, id) {
+  return db("likes")
+    .insert(like)
     .where({ guide_id: id });
 }
 
@@ -64,4 +72,8 @@ function getStepsByGuide(id) {
     )
     .where({ "s.guide_id": id })
     .orderBy("s.step_number");
+}
+
+function getLikesByGuide(id) {
+  return db("likes as l").where({ "l.guide_id": id });
 }

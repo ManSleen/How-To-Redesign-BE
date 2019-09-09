@@ -23,9 +23,20 @@ router.get("/:id", (req, res) => {
         Guides.getStepsByGuide(id)
           .then(steps => {
             guide.steps = steps;
-            res.status(200).json(guide);
+            Guides.getLikesByGuide(id)
+              .then(likes => {
+                guide.likes = likes;
+                res.status(200).json(guide);
+              })
+              .catch(error => {
+                res.status().json({
+                  message: "Could not get likes for guide"
+                });
+              });
           })
-          .catch();
+          .catch(error => {
+            res.status().json({ message: "Could not get steps for guide" });
+          });
       } else {
         res
           .status(404)
@@ -98,7 +109,6 @@ router.post("/", (req, res) => {
 router.post("/:id/steps", (req, res) => {
   const step = req.body;
   const { id } = req.params;
-
   Guides.findById(id)
     .then(guide => {
       if (guide) {

@@ -10,11 +10,25 @@ module.exports = {
 };
 
 function find() {
-  return db("users").select("users.id", "users.username", "users.email");
+  return db("users").select(
+    "users.id",
+    "users.username",
+    "users.email",
+    "users.about_me",
+    "users.profile_image_url"
+  );
 }
 
 function findBy(filter) {
-  return db("users").where(filter);
+  return db("users")
+    .select(
+      "users.id",
+      "users.username",
+      "users.email",
+      "users.about_me",
+      "users.profile_image_url"
+    )
+    .where(filter);
 }
 
 function add(user) {
@@ -29,7 +43,13 @@ function add(user) {
 
 function findById(id) {
   return db("users")
-    .select("users.id", "users.username", "users.email")
+    .select(
+      "users.id",
+      "users.username",
+      "users.email",
+      "users.about_me",
+      "users.profile_image_url"
+    )
     .where({ id })
     .first();
 }
