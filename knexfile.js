@@ -10,7 +10,7 @@ const productionDbConnection = process.env.DATABASE_URL || localPg;
 module.exports = {
   development: {
     client: 'pg',
-    connection:'postgres://localhost/howto',
+    connection:'postgres://postgres:password@localhost/howto',
     migrations: {
       directory: './data/migrations'
     },
@@ -22,7 +22,7 @@ module.exports = {
 
   test: {
     client: 'pg',
-    connection:'postgres://localhost/howto_test',
+    connection:'postgres://postgres:password@localhost/howto_test',
     migrations: {
       directory: './data/migrations'
     },
