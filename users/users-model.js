@@ -12,6 +12,7 @@ module.exports = {
 function find() {
   return db("users").select(
     "users.id",
+    "users.name",
     "users.username",
     "users.email",
     "users.about_me",
@@ -23,6 +24,7 @@ function findBy(filter) {
   return db("users")
     .select(
       "users.id",
+      "users.name",
       "users.username",
       "users.email",
       "users.about_me",
@@ -45,6 +47,7 @@ function findById(id) {
   return db("users")
     .select(
       "users.id",
+      "users.name",
       "users.username",
       "users.email",
       "users.about_me",
