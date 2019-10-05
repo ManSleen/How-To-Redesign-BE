@@ -96,6 +96,7 @@ router.delete("/:id", (req, res) => {
 // Add a new guide
 router.post("/", (req, res) => {
   const guide = req.body;
+  console.log(guide);
   Guides.add(guide)
     .then(guide => {
       res.status(200).json(guide);
