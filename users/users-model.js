@@ -27,6 +27,7 @@ function findBy(filter) {
       "users.name",
       "users.username",
       "users.email",
+      "users.password",
       "users.about_me",
       "users.profile_image_url"
     )

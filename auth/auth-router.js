@@ -8,20 +8,40 @@ const secret = require("../config/secret.js");
 //Register a new user and save to the DB
 router.post("/register", (req, res) => {
   let user = req.body;
-  const hashedPass = bcrypt.hashSync(user.password, 12);
-  user.password = hashedPass;
+  if (user.name === "" || user.username === "" || user.email === "") {
+    res.status(400).json({message: "You must include name, username and email to register"})
+  } else {
+    const hashedPass = bcrypt.hashSync(user.password, 12);
+    user.password = hashedPass;
+    const {username, email} = user;
+    Users.findBy({ username })
+      .first()
+      .then(foundUser => {
+        if (foundUser) {
+          res.status(400).json({message: "That username is already being used"})
+        } else {
+          Users.findBy({ email })
+          .first()
+          .then(found => {
+            if (found) {
+              res.status(400).json({message: "That email is already being used"})
+            } else {
+              console.log("user in Users.add", user)
+              Users.add(user)
+                .then(saved => {
+                  const token = generateToken(user);
+                  res.status(201).json({saved, token});
+                })
+                .catch(error => {
+                  res.status(500).json({message: "Username and email must be unique"});
+                });
+            }
+          }).catch(err => console.log(err))
+        }
+      }).catch(err => console.log(err))
 
-  Users.add(user)
-    .then(saved => {
-      const token = generateToken(user);
-      res.status(201).json({saved, token});
-    })
-    .catch(error => {
-      res.status(500).json({
-        message:
-          "There was an error registering that user, please check your credentials"
-      });
-    });
+    
+  }
 });
 
 router.post("/login", (req, res) => {
@@ -38,7 +58,7 @@ router.post("/login", (req, res) => {
           .json({
             message: `Welcome ${user.username}!`,
             token,
-            user: { userId: user.id, userName: user.username }
+            user
           });
       } else {
         res

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const Guides = require("./guides-model");
+const Users = require('../users/users-model')
 const Steps = require("../steps/steps-model");
 
 // Get all guides
@@ -29,13 +30,13 @@ router.get("/:id", (req, res) => {
                 res.status(200).json(guide);
               })
               .catch(error => {
-                res.status().json({
+                res.status(400).json({
                   message: "Could not get likes for guide"
                 });
               });
           })
           .catch(error => {
-            res.status().json({ message: "Could not get steps for guide" });
+            res.status(400).json({ message: "Could not get steps for guide" });
           });
       } else {
         res
@@ -47,6 +48,24 @@ router.get("/:id", (req, res) => {
       res.status(500).json({ message: "Could not get guide from the DB" })
     );
 });
+
+//Get all guides by specific user
+router.get("/user/:userId", (req, res) => {
+  const { userId } = req.params;
+  Users.findById(userId)
+    .then(user => {
+      if (user) {
+        Guides.findBy({guide_creator: userId})
+          .then(guides => {
+            res.status(200).json(guides)
+          })
+          .catch(error => console.log(error))
+      } else {
+        res.status(404).json({message: "Could not find a user with that id"})
+      }
+  })
+  
+})
 
 // Edit a guide using its ID and pass in changes in body
 router.put("/:id", (req, res) => {
@@ -96,6 +115,7 @@ router.delete("/:id", (req, res) => {
 // Add a new guide
 router.post("/", (req, res) => {
   const guide = req.body;
+  console.log(guide);
   Guides.add(guide)
     .then(guide => {
       res.status(200).json(guide);
