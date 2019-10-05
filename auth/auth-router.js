@@ -26,10 +26,11 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   let { username, password } = req.body;
-
+console.log("req.body", req.body);
   Users.findBy({ username })
     .first()
     .then(user => {
+      console.log("user from login", user);
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateToken(user);
         // Add user id and username
