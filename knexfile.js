@@ -9,48 +9,38 @@ const productionDbConnection = process.env.DATABASE_URL || localPg;
 
 module.exports = {
   development: {
-    client: "sqlite3",
-    connection: {
-      // Name your database and path it correctly
-      filename: "./data/users.db3"
-    },
-    useNullAsDefault: true,
+    client: 'pg',
+    connection:'postgres://postgres:password@localhost/howto',
     migrations: {
-      // Configure where you want your migrations folder to live
-      directory: "./data/migrations"
+      directory: './data/migrations'
     },
     seeds: {
-      // Configure where you want your seeds folder to live
-      directory: "./data/seeds"
+      directory: './data/seeds/dev'
     },
-    pool: {
-      afterCreate: (conn, done) => {
-        conn.run("PRAGMA foreign_keys = ON", done);
-      }
-    }
+    useNullAsDefault: true
   },
-  testing: {
-    client: "sqlite3",
-    connection: {
-      // use a testing db here, if you'd like
-      filename: "./data/test.db3"
-    },
-    useNullAsDefault: true,
+
+  test: {
+    client: 'pg',
+    connection:'postgres://postgres:password@localhost/howto_test',
     migrations: {
-      directory: "./data/migrations"
+      directory: './data/migrations'
     },
     seeds: {
-      directory: "./data/seeds"
-    }
+      directory: './data/seeds/test'
+    },
+    useNullAsDefault: true
   },
+
   production: {
-    client: "pg",
+    client: 'pg',
     connection: productionDbConnection,
     migrations: {
       directory: __dirname + "/data/migrations"
     },
     seeds: {
       directory: __dirname + "./data/seeds"
-    }
+    },
+    useNullAsDefault: true
   }
-};
+}
