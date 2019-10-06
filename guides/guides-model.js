@@ -33,8 +33,15 @@ function add(guide) {
 
 function addStep(step, id) {
   return db("steps")
+  .returning("id")
     .insert(step)
-    .where({ guide_id: id });
+    .where({ guide_id: id })
+    .then(ids => {
+      const [id] = ids;
+      return db("steps")
+        .where({ id })
+        .first();
+    });
 }
 
 function addLike(like, id) {
