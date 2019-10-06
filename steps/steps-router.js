@@ -79,12 +79,13 @@ router.delete("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
   const step = req.body;
+  console.log(step);
   Steps.add(step)
     .then(step => {
       res.status(200).json(step);
     })
     .catch(err => {
-      res.status(500).json({ message: "Could not add step to the DB" });
+      res.status(500).json({ message: "Sorry" });
     });
 });
 

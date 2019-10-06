@@ -51,8 +51,10 @@ function addLike(like, id) {
 }
 
 function findById(id) {
-  return db("guides")
-    .where({ id })
+  return db("guides as g")
+    .select("g.id", "g.guide_name", "g.guide_description", "g.date_created", "g.guide_category", "g.guide_image", "g.guide_keywords", "g.guide_materials", "g.guide_tools", "u.username")
+    .innerJoin("users as u", "g.guide_creator", "=", "u.id")
+    .where({ "g.id": id })
     .first();
 }
 
