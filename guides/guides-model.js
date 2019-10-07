@@ -14,7 +14,9 @@ module.exports = {
 };
 
 function find() {
-  return db("guides");
+  return db("guides as g")
+  .select("g.id", "g.guide_name", "g.guide_description", "g.date_created", "g.guide_category", "g.guide_image", "g.guide_keywords", "g.guide_materials", "g.guide_tools", "u.username")
+    .innerJoin("users as u", "g.guide_creator", "=", "u.id")
 }
 
 function findBy(filter) {
