@@ -36,18 +36,30 @@ router.get('/one/:id', (req, res) => {
   const { id } = req.params;
   Photos.getPhotoById(id)
     .then(photo => {
-      res.status(200).json(photo);
+      let photoWithUrl = {
+        ...photo,
+        url: `${process.env.S3_BASE_URL}${photo.url}`
+      };
+      res.status(200).json(photoWithUrl);
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      res
+        .status(500)
+        .json({ message: 'There was an error getting your photo' });
     });
 });
 
 router.get('/:guideId', (req, res) => {
   const { guideId } = req.params;
   Photos.getPhotosByGuideId(guideId)
-    .then(photo => {
-      res.status(200).json(photo);
+    .then(photos => {
+      const photosWithUrl = photos.map(item => {
+        return {
+          ...item,
+          url: `${process.env.S3_BASE_URL}${item.url}`
+        };
+      });
+      res.status(200).json(photosWithUrl);
     })
     .catch(err => {
       res.status(500).json({ error: err });
@@ -58,7 +70,8 @@ router.post('/', (req, res) => {
   const photo = req.body;
   Photos.addPhoto(photo)
     .then(photo => {
-      res.status(201).json(photo);
+      const [id] = photo;
+      res.status(201).json({ message: 'Photo successfully added', id });
     })
     .catch(err => {
       res.status(500).json({ error: err });
