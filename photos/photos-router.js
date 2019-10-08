@@ -38,7 +38,9 @@ router.get('/one/:id', (req, res) => {
     .then(photo => {
       res.status(200).json(photo);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
 });
 
 router.get('/:guideId', (req, res) => {
@@ -47,16 +49,45 @@ router.get('/:guideId', (req, res) => {
     .then(photo => {
       res.status(200).json(photo);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
 });
 
 router.post('/', (req, res) => {
   const photo = req.body;
   Photos.addPhoto(photo)
     .then(photo => {
-      res.status(200).json(photo);
+      res.status(201).json(photo);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  let foundPhoto;
+  Photos.getPhotoById(id)
+    .then(photo => {
+      foundPhoto = photo;
+      if (photo) {
+        Photos.deletePhoto(id)
+          .then(photo => {
+            res.status(200).json(foundPhoto);
+          })
+          .catch(err => {
+            res.status(500).json({ error: err });
+          });
+      } else {
+        res
+          .status(404)
+          .json({ message: 'Could not find a photo with that ID in the db' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
 });
 
 module.exports = router;
