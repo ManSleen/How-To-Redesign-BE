@@ -14,10 +14,10 @@ function getPhotoById(id) {
     .first();
 }
 
-function getPhotosByGuideId() {
+function getPhotosByGuideId(id) {
   return db('photos')
     .select('*')
-    .insert(photo);
+    .where('guideId', id);
 }
 
 function addPhoto(photo) {

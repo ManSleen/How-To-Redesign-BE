@@ -1,7 +1,7 @@
-const router = require("express").Router();
-const Photos = require("./photos-model");
+const router = require('express').Router();
+const Photos = require('./photos-model');
 require('dotenv').config();
-const uuid = require('uuid/v1')
+const uuid = require('uuid/v1');
 const AWS = require('aws-sdk');
 
 const accessKey = process.env.S3_SECRET_ACCESS_KEY;
@@ -12,14 +12,13 @@ const s3 = new AWS.S3({
   secretAccessKey: accessKey,
   signatureVersion: 'v4',
   region: 'us-west-1'
-})
-
+});
 
 router.post('/signed', (req, res) => {
-    const { id } = req.body;
-    const key = `${id}/${uuid()}.jpeg`;
+  const { id } = req.body;
+  const key = `${id}/${uuid()}.jpeg`;
 
-    s3.getSignedUrl(
+  s3.getSignedUrl(
     'putObject',
     {
       // name of bucket you created
@@ -31,33 +30,33 @@ router.post('/signed', (req, res) => {
       res.send({ key, url });
     }
   );
-})
+});
 
-router.get("/one/:id", (req, res) => {
+router.get('/one/:id', (req, res) => {
   const { id } = req.params;
   Photos.getPhotoById(id)
     .then(photo => {
-      res.status(200).json(photo)
+      res.status(200).json(photo);
     })
-    .catch(err => console.log(err))
-})
+    .catch(err => console.log(err));
+});
 
-router.get("/:guideId", (req, res) => {
+router.get('/:guideId', (req, res) => {
   const { guideId } = req.params;
   Photos.getPhotosByGuideId(guideId)
     .then(photo => {
-      res.status(200).json(photo)
+      res.status(200).json(photo);
     })
-    .catch()
-})
+    .catch(err => console.log(err));
+});
 
-router.post("/", (req, res) => {
-  const photo = req.body
+router.post('/', (req, res) => {
+  const photo = req.body;
   Photos.addPhoto(photo)
     .then(photo => {
-      res.status(200).json(photo)
+      res.status(200).json(photo);
     })
-    .catch(err => console.log(err))
-})
+    .catch(err => console.log(err));
+});
 
 module.exports = router;
