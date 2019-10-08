@@ -36,27 +36,71 @@ router.get('/one/:id', (req, res) => {
   const { id } = req.params;
   Photos.getPhotoById(id)
     .then(photo => {
-      res.status(200).json(photo);
+      let photoWithUrl = {
+        ...photo,
+        url: `${process.env.S3_BASE_URL}${photo.url}`
+      };
+      res.status(200).json(photoWithUrl);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: 'There was an error getting your photo' });
+    });
 });
 
 router.get('/:guideId', (req, res) => {
   const { guideId } = req.params;
   Photos.getPhotosByGuideId(guideId)
-    .then(photo => {
-      res.status(200).json(photo);
+    .then(photos => {
+      const photosWithUrl = photos.map(item => {
+        return {
+          ...item,
+          url: `${process.env.S3_BASE_URL}${item.url}`
+        };
+      });
+      res.status(200).json(photosWithUrl);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
 });
 
 router.post('/', (req, res) => {
   const photo = req.body;
   Photos.addPhoto(photo)
     .then(photo => {
-      res.status(200).json(photo);
+      const [id] = photo;
+      res.status(201).json({ message: 'Photo successfully added', id });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  let foundPhoto;
+  Photos.getPhotoById(id)
+    .then(photo => {
+      foundPhoto = photo;
+      if (photo) {
+        Photos.deletePhoto(id)
+          .then(photo => {
+            res.status(200).json(foundPhoto);
+          })
+          .catch(err => {
+            res.status(500).json({ error: err });
+          });
+      } else {
+        res
+          .status(404)
+          .json({ message: 'Could not find a photo with that ID in the db' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
 });
 
 module.exports = router;

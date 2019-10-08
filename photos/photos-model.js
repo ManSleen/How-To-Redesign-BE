@@ -26,6 +26,8 @@ function addPhoto(photo) {
     .insert(photo);
 }
 
-function deletePhoto() {
-  return;
+function deletePhoto(id) {
+  return db('photos')
+    .del()
+    .where('id', id);
 }
