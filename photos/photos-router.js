@@ -34,12 +34,30 @@ router.post('/signed', (req, res) => {
 })
 
 router.get("/one/:id", (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   Photos.getPhotoById(id)
-    .then(res => console.log(res))
+    .then(photo => {
+      res.status(200).json(photo)
+    })
     .catch(err => console.log(err))
 })
 
-router.get("/:guideId", )
+router.get("/:guideId", (req, res) => {
+  const { guideId } = req.params;
+  Photos.getPhotosByGuideId(guideId)
+    .then(photo => {
+      res.status(200).json(photo)
+    })
+    .catch()
+})
+
+router.post("/", (req, res) => {
+  const photo = req.body
+  Photos.addPhoto(photo)
+    .then(photo => {
+      res.status(200).json(photo)
+    })
+    .catch(err => console.log(err))
+})
 
 module.exports = router;
