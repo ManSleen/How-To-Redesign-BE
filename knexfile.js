@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const localPg = {
   host: "localhost",
   database: "users",
