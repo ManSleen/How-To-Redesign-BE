@@ -1,10 +1,10 @@
 require('dotenv').config();
 
 const localPg = {
-  host: "localhost",
-  database: "users",
-  user: "mike.vansleen",
-  password: "password"
+  host: 'localhost',
+  database: 'users',
+  user: 'mike.vansleen',
+  password: 'password'
 };
 
 const productionDbConnection = process.env.DATABASE_URL || localPg;
@@ -12,7 +12,7 @@ const productionDbConnection = process.env.DATABASE_URL || localPg;
 module.exports = {
   development: {
     client: 'pg',
-    connection:'postgres://postgres:password@localhost/howto',
+    connection: 'postgres://postgres:password@localhost/howto',
     migrations: {
       directory: './data/migrations'
     },
@@ -24,7 +24,7 @@ module.exports = {
 
   test: {
     client: 'pg',
-    connection:'postgres://postgres:password@localhost/howto_test',
+    connection: 'postgres://postgres:password@localhost/howto_test',
     migrations: {
       directory: './data/migrations'
     },
@@ -38,11 +38,11 @@ module.exports = {
     client: 'pg',
     connection: productionDbConnection,
     migrations: {
-      directory: __dirname + "/data/migrations"
+      directory: __dirname + '/data/migrations'
     },
     seeds: {
-      directory: __dirname + "./data/seeds"
+      directory: __dirname + '/data/seeds'
     },
     useNullAsDefault: true
   }
-}
+};
