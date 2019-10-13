@@ -1,22 +1,23 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
-const Guides = require("./guides-model");
-const Users = require('../users/users-model')
-const Steps = require("../steps/steps-model");
+const Guides = require('./guides-model');
+const Users = require('../users/users-model');
+
+const restricted = require('../auth/restricted-middleware.js');
 
 // Get all guides
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   Guides.find()
     .then(guide => {
       res.status(200).json(guide);
     })
     .catch(err => {
-      res.status(500).json({ message: "Could not get all guides from the db" });
+      res.status(500).json({ message: 'Could not get all guides from the db' });
     });
 });
 
 // Get guide by ID
-router.get("/:id", (req, res) => {
+router.get('/:id', (req, res) => {
   const { id } = req.params;
   Guides.findById(id)
     .then(guide => {
@@ -31,44 +32,42 @@ router.get("/:id", (req, res) => {
               })
               .catch(error => {
                 res.status(400).json({
-                  message: "Could not get likes for guide"
+                  message: 'Could not get likes for guide'
                 });
               });
           })
           .catch(error => {
-            res.status(400).json({ message: "Could not get steps for guide" });
+            res.status(400).json({ message: 'Could not get steps for guide' });
           });
       } else {
         res
           .status(404)
-          .json({ message: "Could not find a guide with that ID in the db" });
+          .json({ message: 'Could not find a guide with that ID in the db' });
       }
     })
     .catch(err =>
-      res.status(500).json({ message: "Could not get guide from the DB" })
+      res.status(500).json({ message: 'Could not get guide from the DB' })
     );
 });
 
 //Get all guides by specific user
-router.get("/user/:userId", (req, res) => {
+router.get('/user/:userId', (req, res) => {
   const { userId } = req.params;
-  Users.findById(userId)
-    .then(user => {
-      if (user) {
-        Guides.findBy({guide_creator: userId})
-          .then(guides => {
-            res.status(200).json(guides)
-          })
-          .catch(error => console.log(error))
-      } else {
-        res.status(404).json({message: "Could not find a user with that id"})
-      }
-  })
-  
-})
+  Users.findById(userId).then(user => {
+    if (user) {
+      Guides.findBy({ guide_creator: userId })
+        .then(guides => {
+          res.status(200).json(guides);
+        })
+        .catch(error => console.log(error));
+    } else {
+      res.status(404).json({ message: 'Could not find a user with that id' });
+    }
+  });
+});
 
 // Edit a guide using its ID and pass in changes in body
-router.put("/:id", (req, res) => {
+router.put('/:id', (req, res) => {
   const changes = req.body;
   const { id } = req.params;
   Guides.update(changes, id)
@@ -78,16 +77,16 @@ router.put("/:id", (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: "Could not find a guide with that ID in the db" });
+          .json({ message: 'Could not find a guide with that ID in the db' });
       }
     })
     .catch(error => {
-      res.status(500).json({ message: "Could not update guide in the DB" });
+      res.status(500).json({ message: 'Could not update guide in the DB' });
     });
 });
 
 // Delete a guide using its ID
-router.delete("/:id", (req, res) => {
+router.delete('/:id', (req, res) => {
   const { id } = req.params;
   let foundGuide;
   Guides.findById(id)
@@ -102,18 +101,18 @@ router.delete("/:id", (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: "Could not find a guide with that ID in the db" });
+          .json({ message: 'Could not find a guide with that ID in the db' });
       }
     })
     .catch(err => {
       return res
         .status(500)
-        .json({ message: "Could not delete guide from the db" });
+        .json({ message: 'Could not delete guide from the db' });
     });
 });
 
 // Add a new guide
-router.post("/", (req, res) => {
+router.post('/', (req, res) => {
   const guide = req.body;
 
   Guides.add(guide)
@@ -121,12 +120,12 @@ router.post("/", (req, res) => {
       res.status(200).json(guide);
     })
     .catch(err => {
-      res.status(500).json({ message: "Could not add guide to the db" });
+      res.status(500).json({ message: 'Could not add guide to the db' });
     });
 });
 
 // Add steps to a specific guide using guide id
-router.post("/:id/steps", (req, res) => {
+router.post('/:id/steps', (req, res) => {
   const step = req.body;
   const { id } = req.params;
   Guides.findById(id)
@@ -139,14 +138,14 @@ router.post("/:id/steps", (req, res) => {
             res.status(201).json(guide);
           })
           .catch(err => {
-            res.status(500).json({ message: "Could not add step to the db" });
+            res.status(500).json({ message: 'Could not add step to the db' });
           });
       } else {
-        res.status(404).json({ message: "Could not find that guide by ID" });
+        res.status(404).json({ message: 'Could not find that guide by ID' });
       }
     })
     .catch(err => {
-      res.status(500).json({ message: "Could not add step to the db" });
+      res.status(500).json({ message: 'Could not add step to the db' });
     });
 });
 
