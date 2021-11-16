@@ -29,7 +29,7 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.544.0",
+    "aws-sdk": "^2.814.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",
